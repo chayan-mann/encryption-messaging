@@ -25,10 +25,11 @@ class TestClient {
         // Initialize encryption manager
         this.encryptionManager = new EncryptionManager(this.userId);
         
-        // Register
+        // Register, sharing our real public key with the server
         this.ws.send(JSON.stringify({
           type: 'register',
-          userId: this.userId
+          userId: this.userId,
+          publicKey: this.encryptionManager.getPublicKeyPEM()
         }));
         
         resolve();

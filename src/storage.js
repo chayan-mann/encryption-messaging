@@ -10,11 +10,10 @@ class Storage {
   /**
    * Register a new user
    */
-  registerUser(userId, encryptionManager, socket) {
+  registerUser(userId, publicKey, socket) {
     this.users.set(userId, {
       userId,
-      encryptionManager,
-      publicKey: encryptionManager.getPublicKeyPEM(),
+      publicKey,
       socket,
       messageQueue: [],
       connectedAt: new Date()

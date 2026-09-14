@@ -1,16 +1,12 @@
-const EncryptionManager = require('./encryption');
 const storage = require('./storage');
 
 class WebSocketHandler {
 
-    static handleConnection(socket, userId){
+    static handleConnection(socket, userId, publicKey){
         console.log(`🔌 New connection attempt: ${userId}`);
 
-        // Create encryption manager for this user
-        const encryptionManager = new EncryptionManager(userId);
-        
-        // Register user in storage
-        storage.registerUser(userId, encryptionManager, socket);
+        // Register user in storage using the public key they provided
+        storage.registerUser(userId, publicKey, socket);
 
         // Check for queued messages
         const queuedMessages = storage.getQueuedMessages(userId);
@@ -31,7 +27,7 @@ class WebSocketHandler {
         socket.send(JSON.stringify({
             type: 'welcome',
             message: `Welcome ${userId}! You are connected.`,
-            yourPublicKey: encryptionManager.getPublicKeyPEM().substring(0, 50) + '...',
+            yourPublicKey: publicKey.substring(0, 50) + '...',
             connectedUsers: storage.listConnectedUsers()
         }));
     }

@@ -49,7 +49,15 @@ wss.on('connection', (socket) => {
             }));
             return;
           }
-          WebSocketHandler.handleConnection(socket, userId);
+          if (!data.publicKey) {
+            socket.send(JSON.stringify({
+              type: 'error',
+              message: 'publicKey is required'
+            }));
+            userId = null;
+            return;
+          }
+          WebSocketHandler.handleConnection(socket, userId, data.publicKey);
         } else {
           socket.send(JSON.stringify({
             type: 'error',
